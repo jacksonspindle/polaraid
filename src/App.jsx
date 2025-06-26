@@ -20,7 +20,7 @@ export default function App() {
   useEffect(() => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   if (isMobile) {
-    setIsFrontCamera(false); // Ensure front camera is default on mobile
+    setIsFrontCamera(false); // Ensure back camera is default on mobile
   }
 }, []);
 
@@ -70,6 +70,12 @@ export default function App() {
     ctx.drawImage(video, dx, dy, width, height);
 
     const imageDataUrl = canvas.toDataURL("image/png");
+    
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      setIsFrontCamera(false); // Always reset to back camera after photo on mobile
+    }
+
     setShowCamera(false);
 
   
