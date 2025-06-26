@@ -17,6 +17,13 @@ export default function App() {
   const [isCameraLoading, setIsCameraLoading] = useState(false);
   const [isFrontCamera, setIsFrontCamera] = useState(true); 
 
+  useEffect(() => {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    setIsFrontCamera(true); // Ensure front camera is default on mobile
+  }
+}, []);
+
   const handleTakePhoto = async () => {
   setShowCamera(true);
   setIsCameraLoading(true);
