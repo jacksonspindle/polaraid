@@ -145,15 +145,27 @@ export default function App() {
               className="rounded-xl object-cover border border-gray-400 shadow-md w-full h-full"
               style={{ display: isCameraLoading ? "none" : "block" }}
             />
-            <button
-              onClick={() => {
-                setIsFrontCamera(prev => !prev);
-                handleTakePhoto(); // re-trigger camera with new mode
-              }}
-              className="absolute top-2 right-2 text-white text-xs bg-black/40 backdrop-blur-md px-2 py-1 rounded shadow"
-            >
-              🔄 Flip Camera
-            </button>
+            {!isCameraLoading && (
+              <button
+                onClick={async () => {
+                  setIsCameraLoading(true); // Prevent flicker and double tap bug
+                  setIsFrontCamera(prev => !prev);
+
+                  // Stop current stream if active
+                  const video = videoRef.current;
+                  const stream = video?.srcObject;
+                  stream?.getTracks()?.forEach((track) => track.stop());
+
+                  // Wait a tick for state to update
+                  setTimeout(() => {
+                    handleTakePhoto(); // Trigger new camera
+                  }, 200);
+                }}
+                className="absolute top-2 right-2 text-white text-xs bg-black/40 backdrop-blur-md px-2 py-1 rounded shadow"
+              >
+                🔄 Flip Camera
+              </button>
+            )}
           </div>
           <button
           type="button"
