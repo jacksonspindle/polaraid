@@ -20,7 +20,7 @@ export default function App() {
   useEffect(() => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   if (isMobile) {
-    setIsFrontCamera(true); // Ensure front camera is default on mobile
+    setIsFrontCamera(false); // Ensure front camera is default on mobile
   }
 }, []);
 
