@@ -15,21 +15,29 @@ export default function App() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraLoading, setIsCameraLoading] = useState(false);
+  const [isFrontCamera, setIsFrontCamera] = useState(true); 
 
   const handleTakePhoto = async () => {
-    setShowCamera(true);
-    setIsCameraLoading(true);
-    if (navigator.mediaDevices?.getUserMedia) {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.onloadeddata = () => {
-          setIsCameraLoading(false);
-          videoRef.current.play();
-        };
-      }
+  setShowCamera(true);
+  setIsCameraLoading(true);
+
+  const constraints = {
+    video: {
+      facingMode: isFrontCamera ? "user" : "environment"
     }
   };
+
+  if (navigator.mediaDevices?.getUserMedia) {
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.onloadeddata = () => {
+        setIsCameraLoading(false);
+        videoRef.current.play();
+      };
+    }
+  }
+};
 
   const handleCapture = () => {
   const video = videoRef.current;
@@ -136,6 +144,15 @@ export default function App() {
             className="rounded-xl object-cover border border-gray-400 shadow-md"
             style={{ display: isCameraLoading ? "none" : "block", width: "300px", height: "300px" }}
           />
+          <button
+            onClick={() => {
+              setIsFrontCamera(prev => !prev);
+              handleTakePhoto(); // re-trigger camera with new mode
+            }}
+            className="text-sm underline mb-2"
+          >
+            🔄 Flip Camera
+          </button>
           <button
           type="button"
             onClick={handleCapture}
