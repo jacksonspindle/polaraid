@@ -136,23 +136,25 @@ export default function App() {
               <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
             </div>
           )}
-          <video
-            ref={videoRef}
-            playsInline 
-            autoPlay 
-            muted
-            className="rounded-xl object-cover border border-gray-400 shadow-md"
-            style={{ display: isCameraLoading ? "none" : "block", width: "300px", height: "300px" }}
-          />
-          <button
-            onClick={() => {
-              setIsFrontCamera(prev => !prev);
-              handleTakePhoto(); // re-trigger camera with new mode
-            }}
-            className="text-sm underline mb-2"
-          >
-            🔄 Flip Camera
-          </button>
+          <div className="relative" style={{ width: "300px", height: "300px" }}>
+            <video
+              ref={videoRef}
+              playsInline 
+              autoPlay 
+              muted
+              className="rounded-xl object-cover border border-gray-400 shadow-md w-full h-full"
+              style={{ display: isCameraLoading ? "none" : "block" }}
+            />
+            <button
+              onClick={() => {
+                setIsFrontCamera(prev => !prev);
+                handleTakePhoto(); // re-trigger camera with new mode
+              }}
+              className="absolute top-2 right-2 text-white text-xs bg-black/40 backdrop-blur-md px-2 py-1 rounded shadow"
+            >
+              🔄 Flip Camera
+            </button>
+          </div>
           <button
           type="button"
             onClick={handleCapture}
