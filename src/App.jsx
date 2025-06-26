@@ -87,6 +87,20 @@ export default function App() {
   }
 };
 
+const handleFlipCamera = async () => {
+  if (isCameraLoading) return; // Prevent multiple triggers
+
+  setIsCameraLoading(true);
+  setIsFrontCamera((prev) => !prev);
+
+  const video = videoRef.current;
+  const stream = video?.srcObject;
+  stream?.getTracks()?.forEach((track) => track.stop());
+
+  setTimeout(async () => {
+    await handleTakePhoto(); // Ensure async resolution
+  }, 300);
+};
 
   return (
     <div className="w-screen h-screen bg-gradient-to-b from-gray-900 to-gray-700 text-white relative overflow-hidden">
@@ -147,20 +161,7 @@ export default function App() {
             />
             {!isCameraLoading && (
               <button
-                onClick={async () => {
-                  setIsCameraLoading(true); // Prevent flicker and double tap bug
-                  setIsFrontCamera(prev => !prev);
-
-                  // Stop current stream if active
-                  const video = videoRef.current;
-                  const stream = video?.srcObject;
-                  stream?.getTracks()?.forEach((track) => track.stop());
-
-                  // Wait a tick for state to update
-                  setTimeout(() => {
-                    handleTakePhoto(); // Trigger new camera
-                  }, 200);
-                }}
+                onClick={handleFlipCamera}
                 className="absolute top-2 right-2 text-white text-xs bg-black/40 backdrop-blur-md px-2 py-1 rounded shadow"
               >
                 🔄 Flip Camera
